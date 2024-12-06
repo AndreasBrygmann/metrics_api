@@ -15,4 +15,4 @@ COPY ./app /code/app
 EXPOSE 80
 
 
-CMD ["metrics_api", "run", "app/main.py", "--port", "80"]
+CMD ["fastapi", "run", "app/main.py", "--port", "80"]
