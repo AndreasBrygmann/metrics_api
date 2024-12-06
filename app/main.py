@@ -18,16 +18,13 @@ def NovaClient():
 
 def checkServers():
     active = 0
-    suspended = 0
     for i in range(9):
         server = NovaClient().servers.find(name = f"server{i}")
         status = server.status
         if status == "ACTIVE":
             active += 1
-        elif status == "SUSPENDED":
-            suspended += 1
 
-    return active, suspended
+    return active
 
 @app.get("/")
 def read_root():
@@ -35,7 +32,8 @@ def read_root():
 
 @app.get("/metrics", response_class=PlainTextResponse)
 def displayActiveVMs():
-    activeVMString = '# TYPE server_count gauge\n# HELP server_count "Number of active servers or VMs"\nserver_count_python{title="Active Virtual Machines", totalvms="9"} ' + str(active) + '\n'
+    active = checkServers()
+    activeVMString = '# TYPE server_count_active gauge\n# HELP server_count_active "Number of active servers or VMs"\nserver_count_active{title="Active Virtual Machines", totalvms="9"} ' + str(active) + '\n'
     #template = f"<html><head><title>Is this Showing?</title></head><body><p>{activeVMString}</p></body></html>"
     
     return PlainTextResponse(content=activeVMString, status_code=200)
