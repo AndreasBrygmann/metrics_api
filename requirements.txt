@@ -1,0 +1,3 @@
+python-novaclient
+keystoneauth1
+fastapi
